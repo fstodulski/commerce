@@ -21,7 +21,7 @@ export const MediaPlaceholder = ({
         },
       )}
     >
-      {children}
+      {children ?? "Media is loading..."}
     </div>
   );
 };

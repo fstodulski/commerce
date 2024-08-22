@@ -1,36 +1,222 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Points to cover:
 
-## Getting Started
+## 1. DX: How to use Media component
+"Take into consideration that Media component is one of most commonly used component in the codebase and focus on it’s DX for common use cases".
 
-First, run the development server:
+#### How?
+Instead providing hermetic components I decided to go with block/composition pattern. This way I can provide all the functionality I need without having to worry about the implementation details. I also can easily reuse the components in other projects.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Keep components as simple as possible with as little of abstraction as possible. 
+
+Media is divided between 3 main components:
+- Media.Root
+```tsx
+export type MediaRootProps = {
+  className?: string;
+  children: ReactNode;
+};
+export const MediaRoot = ({ className, children }: MediaRootProps) => {
+  return (
+    <figure className={cn("relative flex overflow-hidden", className)}>
+      {children}
+    </figure>
+  );
+};
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Media.Image
+```tsx
+export type MediaImageProps = {
+  className?: string;
+  hoverCaption?: ReactNode;
+  mediaPlaceholder?: ReactNode;
+} & ImageProps;
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+export const MediaImage = ({
+  className,
+  hoverCaption,
+  mediaPlaceholder,
+  ...props
+}: MediaImageProps) => {
+  const [isLoading, setIsLoading] = useState(true);
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+  const onLoad = () => {
+    setIsLoading(false);
+  };
 
-## Learn More
+  const onLoadStart = () => {
+    setIsLoading(true);
+  };
 
-To learn more about Next.js, take a look at the following resources:
+  return (
+    <figure className="group bg-gray-100 dark:bg-neutral-800">
+      {mediaPlaceholder && (
+        <MediaPlaceholder visible={isLoading}>
+          {mediaPlaceholder}
+        </MediaPlaceholder>
+      )}
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+      <Image
+        onLoadStart={onLoadStart}
+        onLoad={onLoad}
+        className={className}
+        {...props}
+      />
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+      {hoverCaption && <MediaHoverCaption>{hoverCaption}</MediaHoverCaption>}
+    </figure>
+  );
+};
 
-## Deploy on Vercel
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Media Video
+```tsx
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+export type MediaVideoProps = {
+  className?: string;
+  children?: ReactNode;
+  hoverCaption?: ReactNode;
+  mediaPlaceholder?: ReactNode;
+  thumbnail: Pick<MediaImageProps, "src" | "alt" | "width" | "height">;
+} & VideoHTMLAttributes<HTMLVideoElement>;
+
+export const MediaVideo = ({
+  className,
+  autoPlay = true,
+  muted = true,
+  loop = true,
+  controls = false,
+  children,
+  hoverCaption,
+  mediaPlaceholder,
+  thumbnail,
+  ...props
+}: MediaVideoProps) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const onLoad = () => {
+    setIsLoading(false);
+  };
+
+  return (
+    <figure className={cn("group relative z-0 flex", className)}>
+      {mediaPlaceholder && (
+        <MediaPlaceholder visible={isLoading}>
+          {mediaPlaceholder}
+        </MediaPlaceholder>
+      )}
+      {thumbnail.src && (
+        <MediaImage
+          width={thumbnail.width}
+          height={thumbnail.height}
+          className="sm:hidden"
+          hoverCaption={hoverCaption}
+          src={thumbnail.src}
+          alt="Video thumbnail"
+        />
+      )}
+
+      <video
+        className="z-10 hidden h-full w-full object-cover sm:flex"
+        {...props}
+        loop
+        muted
+        autoPlay
+        onLoad={onLoad}
+        controls={controls}
+      >
+        <source
+          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          type="video/mp4"
+        />
+      </video>
+
+      <MediaHoverCaption>{hoverCaption}</MediaHoverCaption>
+    </figure>
+  );
+};
+```
+
+As you can see there are some additioanl components to use with Media component.
+
+
+- MediaPlaceholder - used to display loading state of the Image/Video
+```tsx
+export type MediaPlaceholderProps = {
+  className?: string;
+  children?: ReactNode;
+  visible: boolean;
+};
+export const MediaPlaceholder = ({
+  className,
+  visible,
+  children,
+}: MediaPlaceholderProps) => {
+  return (
+    <div
+      className={cn(
+        "pointer-events-none absolute flex h-full w-full items-center justify-center bg-gray-100 font-light text-xs opacity-0 dark:bg-neutral-800",
+        className,
+        {
+          "opacity-100": visible,
+        },
+      )}
+    >
+      {children ?? "Media is loading..."}
+    </div>
+  );
+};
+```
+
+- MediaHoverCaption
+```tsx
+  import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
+
+export type MediaHoverCaptionProps = {
+  className?: string;
+  children?: ReactNode;
+};
+export const MediaHoverCaption = ({
+  className,
+  children,
+}: MediaHoverCaptionProps) => {
+  return (
+    <div
+      className={cn(
+        "absolute top-0 left-0 z-20 flex h-full w-full items-end bg-gradient-to-b from-gray-50/0 via-gray-300/20 to-gray-700/90 p-2 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+```
+
+More components might seem to be overkill but I think it's worth it to have functionality spread across multiple components. This way developer can use them as LEGO blocks and compose them to create the desired UI.
+
+## 1. Control video playback externally
+"Bonus: Consider a scenario where the Media component needs to control video playback externally, such as in a slider where the video only plays when visible on the screen. Determine how your API could support this functionality for occasional use."
+
+#### How?
+I did simply wrap native video element. Inherited all props and events. Developer can simply control playback externally via props and events.
+
+```tsx
+<Media.Video
+  thumbnail={{
+    src: bunny,
+    alt: "Picture 1",
+    width: 160,
+    height: 160,
+  }}
+  className=""
+  onPlay={() => console.log("play")}
+  onPause={() => console.log("pause")}
+  onEnded={() => console.log("ended")}
+  hoverCaption={videoHoverCaption()}
+/>
+```
+
+

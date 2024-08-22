@@ -8,11 +8,13 @@ import { type ReactNode, useState } from "react";
 export type MediaImageProps = {
   className?: string;
   hoverCaption?: ReactNode;
+  mediaPlaceholder?: ReactNode;
 } & ImageProps;
 
 export const MediaImage = ({
   className,
   hoverCaption,
+  mediaPlaceholder,
   ...props
 }: MediaImageProps) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,9 +29,12 @@ export const MediaImage = ({
 
   return (
     <figure className="group bg-gray-100 dark:bg-neutral-800">
-      <MediaPlaceholder visible={isLoading}>
-        Image is loading...
-      </MediaPlaceholder>
+      {mediaPlaceholder && (
+        <MediaPlaceholder visible={isLoading}>
+          {mediaPlaceholder}
+        </MediaPlaceholder>
+      )}
+
       <Image
         onLoadStart={onLoadStart}
         onLoad={onLoad}
@@ -37,7 +42,7 @@ export const MediaImage = ({
         {...props}
       />
 
-      <MediaHoverCaption>{hoverCaption}</MediaHoverCaption>
+      {hoverCaption && <MediaHoverCaption>{hoverCaption}</MediaHoverCaption>}
     </figure>
   );
 };
