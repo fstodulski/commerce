@@ -5,18 +5,19 @@ import { MediaPlaceholder } from "@/lib/media/palceholder";
 import Image, { type ImageProps } from "next/image";
 import { type ReactNode, useState } from "react";
 
-export type MediaImageProps = {
+export type MediaImageProps<T> = {
   className?: string;
   hoverCaption?: ReactNode;
   mediaPlaceholder?: ReactNode;
-} & ImageProps;
+} & ImageProps &
+  T;
 
-export const MediaImage = ({
+export const MediaImage = <T,>({
   className,
   hoverCaption,
   mediaPlaceholder,
   ...props
-}: MediaImageProps) => {
+}: MediaImageProps<T>) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const onLoad = () => {
