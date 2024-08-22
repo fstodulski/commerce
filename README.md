@@ -197,7 +197,7 @@ export const MediaHoverCaption = ({
 
 More components might seem to be overkill but I think it's worth it to have functionality spread across multiple components. This way developer can use them as LEGO blocks and compose them to create the desired UI.
 
-## 1. Control video playback externally
+## 2. Control video playback externally
 "Bonus: Consider a scenario where the Media component needs to control video playback externally, such as in a slider where the video only plays when visible on the screen. Determine how your API could support this functionality for occasional use."
 
 #### How?
@@ -219,4 +219,35 @@ I did simply wrap native video element. Inherited all props and events. Develope
 />
 ```
 
+## 3. Pay/Pouse controls position
+Using component rendering props I can easily control where the controls are positioned.
 
+```tsx
+     <Media.Video
+          thumbnail={{
+            src: bunny,
+            alt: "Picture 1",
+            width: 160,
+            height: 160,
+          }}
+          autoPlay={isPlaying}
+          className=""
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => console.log("ended")}
+          hoverCaption={videoHoverCaption()}
+        >
+          {(ref) => (
+            <Button
+              size="icon"
+              type="button"
+              onClick={() =>
+                isPlaying ? ref.current?.pause() : ref.current?.play()
+              }
+              className="absolute top-2 right-2 z-20"
+            >
+              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+            </Button>
+          )}
+        </Media.Video>
+        ```

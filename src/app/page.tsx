@@ -61,7 +61,7 @@ export default function Home() {
               onClick={() =>
                 isPlaying ? ref.current?.pause() : ref.current?.play()
               }
-              className="absolute top-2 right-2 z-20"
+              className="absolute top-2 right-2 z-20 opacity-0 duration-300 ease-in-out group-hover:opacity-100"
             >
               {isPlaying ? <Pause size={16} /> : <Play size={16} />}
             </Button>
