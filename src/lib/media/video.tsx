@@ -11,15 +11,18 @@ import {
   useState,
 } from "react";
 
-export type MediaVideoProps = {
+export type MediaVideoProps<T> = {
   className?: string;
   children?: (ref: React.RefObject<HTMLVideoElement>) => ReactNode;
   hoverCaption?: ReactNode;
   mediaPlaceholder?: ReactNode;
-  thumbnail: Pick<MediaImageProps, "src" | "alt" | "width" | "height">;
+  thumbnail: Pick<
+    MediaImageProps<T>,
+    "src" | "alt" | "width" | "height" | "className"
+  >;
 } & VideoHTMLAttributes<HTMLVideoElement>;
 
-export const MediaVideo = ({
+export const MediaVideo = <T,>({
   className,
   autoPlay = true,
   muted = true,
@@ -30,7 +33,7 @@ export const MediaVideo = ({
   mediaPlaceholder,
   thumbnail,
   ...props
-}: MediaVideoProps) => {
+}: MediaVideoProps<T>) => {
   const ref = useRef<HTMLVideoElement>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -49,7 +52,7 @@ export const MediaVideo = ({
         <MediaImage
           width={thumbnail.width}
           height={thumbnail.height}
-          className="sm:hidden"
+          className={cn("sm:hidden", thumbnail.className)}
           hoverCaption={hoverCaption}
           src={thumbnail.src}
           alt="Video thumbnail"
@@ -62,7 +65,7 @@ export const MediaVideo = ({
         {...props}
         loop
         muted
-        autoPlay
+        autoPlay={autoPlay}
         onLoad={onLoad}
         controls={controls}
       >

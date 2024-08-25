@@ -67,25 +67,14 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        gradient: {
-          "0%, 100%": {
-            "background-size": "400% 400%",
-            "background-position": "0% 50%",
-          },
-          "50%": {
-            "background-size": "400% 400%",
-            "background-position": "100% 50%",
-          },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
-        gradient: "gradient 3s ease infinite",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 
 export default config;

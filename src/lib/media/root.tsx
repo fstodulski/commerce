@@ -7,8 +7,8 @@ export type MediaRootProps = {
 };
 export const MediaRoot = ({ className, children }: MediaRootProps) => {
   return (
-    <figure className={cn("relative flex overflow-hidden", className)}>
+    <div className={cn("relative flex overflow-hidden", className)}>
       {children}
-    </figure>
+    </div>
   );
 };

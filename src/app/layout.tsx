@@ -1,5 +1,8 @@
+import { CommerceUILogo } from "@/lib/ui/commerce-logo";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,8 +18,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn("scroll-smooth antialiased focus:scroll-auto")}
+    >
+      <body className={inter.className}>
+        <header className="sticky top-0 z-50 w-full border-border border-b bg-background/80 py-4 backdrop-blur-sm">
+          <div className="container flex items-center justify-center gap-10 text-foreground text-sm">
+            <Link href="/media-component">Media Component</Link>
+
+            <CommerceUILogo />
+
+            <Link href="/assessing-design">Assessing Design</Link>
+          </div>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }
