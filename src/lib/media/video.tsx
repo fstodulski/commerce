@@ -75,7 +75,7 @@ export const MediaVideo = <T,>({
         />
       </video>
 
-      {ref && children && children(ref)}
+      {children?.(ref)}
 
       <MediaHoverCaption>{hoverCaption}</MediaHoverCaption>
     </figure>

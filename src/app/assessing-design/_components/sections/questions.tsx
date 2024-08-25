@@ -59,7 +59,8 @@ export const QuestionsSection = () => {
                 <AccordionContent className="grid grid-cols-1 gap-2 text-base md:w-3/4">
                   <span>{item.answer}</span>
 
-                  {item?.images?.length > 0 &&
+                  {item.images &&
+                    item?.images?.length > 0 &&
                     item.images?.map((image, index) => (
                       <div
                         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
