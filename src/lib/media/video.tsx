@@ -13,7 +13,11 @@ import {
 
 export type MediaVideoProps<T> = {
   className?: string;
-  children?: (ref: React.RefObject<HTMLVideoElement>) => ReactNode;
+  children?: ({
+    videoRef,
+  }: {
+    videoRef: HTMLVideoElement;
+  }) => ReactNode;
   hoverCaption?: ReactNode;
   mediaPlaceholder?: ReactNode;
   thumbnail: Pick<
@@ -75,7 +79,10 @@ export const MediaVideo = <T,>({
         />
       </video>
 
-      {children?.(ref)}
+      {ref.current &&
+        children?.({
+          videoRef: ref.current,
+        })}
 
       <MediaHoverCaption>{hoverCaption}</MediaHoverCaption>
     </figure>

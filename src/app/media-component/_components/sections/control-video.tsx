@@ -47,12 +47,13 @@ export const ControlVideoSection = () => {
                 onPause={() => setIsPlaying(false)}
                 onEnded={() => console.log("ended")}
               >
-                {(ref) => (
+                {/* @ts-ignore */}
+                {({ videoRef }) => (
                   <Button
                     size="icon"
                     type="button"
                     onClick={() =>
-                      isPlaying ? ref.current?.pause() : ref.current?.play()
+                      isPlaying ? videoRef.pause() : videoRef.play()
                     }
                     className="absolute top-2 right-2 z-20 opacity-0 duration-300 ease-in-out group-hover:opacity-100"
                   >
