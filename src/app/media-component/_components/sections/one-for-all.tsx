@@ -7,6 +7,8 @@
 import { bunny } from "@/lib/constants/shared.const";
 import { Media } from "@/lib/media";
 import { Container, Section } from "@/lib/ui/craft";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import dracula from "react-syntax-highlighter/dist/esm/styles/prism/dracula";
 import Balancer from "react-wrap-balancer";
 // Asset imports
 
@@ -44,6 +46,28 @@ export const OneForAllSection = () => {
               for Sanity, Mux, etc, just use extenral page props and pass them.
             </Balancer>
           </p>
+        </Container>
+
+        <Container className="grid items-stretch">
+          <SyntaxHighlighter language="tsx" style={dracula}>
+            {`
+            
+            // Sanity props will be passed to the component NextImage
+            type SanityImageProps = {
+              options: {
+                hotspot: boolean;
+              }
+            };
+
+            <Media.Root className="w-full">
+              <Media.Image<SanityImageProps> // << Here passing Sanity type
+                src={imageSrc}
+                autoPlay={false}
+                className="w-full"
+              />
+            </Media.Root>
+            `}
+          </SyntaxHighlighter>
         </Container>
       </Section>
     </>

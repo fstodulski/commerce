@@ -1,6 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import dracula from "react-syntax-highlighter/dist/esm/styles/prism/dracula";
+
 // React and Next.js imports
 
 // UI component imports
@@ -59,6 +62,40 @@ export const ControlVideoSection = () => {
               </Media.Video>
             </Media.Root>
           </div>
+        </Container>
+
+        <Container className="grid items-stretch">
+          <SyntaxHighlighter language="tsx" style={dracula}>
+            {`<Media.Root className="w-full">
+  <Media.Video
+    thumbnail={{
+      src: bunny,
+      alt: "Picture 1",
+      width: 160,
+      height: 160,
+    }}
+    autoPlay={isPlaying}
+    className="w-full"
+    onPlay={() => setIsPlaying(true)}
+    onPause={() => setIsPlaying(false)}
+    onEnded={() => console.log("ended")}
+  >
+  {(ref) => (
+    <Button
+      size="icon"
+      type="button"
+      onClick={() =>
+        isPlaying ? ref.current?.pause() : ref.current?.play()
+      }
+      className="absolute top-2 right-2 z-20 opacity-0 duration-300 ease-in-out group-hover:opacity-100"
+    >
+      {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+    </Button>
+  )}
+  </Media.Video>
+</Media.Root>
+            `}
+          </SyntaxHighlighter>
         </Container>
       </Section>
     </>
