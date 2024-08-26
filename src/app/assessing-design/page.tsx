@@ -1,3 +1,4 @@
+import { ActionPointsSection } from "@/app/assessing-design/_components/sections/action-points";
 import { ComplexitySection } from "@/app/assessing-design/_components/sections/complexity";
 import { HeroSection } from "@/app/assessing-design/_components/sections/hero";
 import { HighLevelAssumptionsSection } from "@/app/assessing-design/_components/sections/high-level-assumtions";
@@ -16,6 +17,7 @@ export default function AssessingDesign() {
         <PinPointsSection />
         <ComplexitySection />
         <QuestionsSection />
+        <ActionPointsSection />
       </Main>
     </>
   );
